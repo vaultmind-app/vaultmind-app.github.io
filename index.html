@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VaultMind — Knowledge Hub for NotebookLM</title>
 <meta name="description" content="Save AI chats from ChatGPT, Claude, Gemini & Perplexity to NotebookLM in one click. Knowledge graph, smart dedup, bi-directional sync, team collaboration.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -449,9 +452,18 @@ footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom
   <div class="container text-center">
     <div class="section-label">Pricing</div>
     <div class="section-title centered">Start free. Upgrade when you need more.</div>
-    <div class="section-sub centered">No credit card required. Cancel anytime.</div>
+    <div class="section-sub centered">No credit card required. Cancel anytime. 100% money-back guarantee.</div>
+
+    <!-- Billing toggle -->
+    <div style="display:inline-flex;gap:4px;background:#eee;border-radius:10px;padding:4px;margin-top:28px;margin-bottom:8px;" id="billing-toggle">
+      <button onclick="setBilling('monthly')" class="billing-btn active" data-billing="monthly" style="padding:8px 18px;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;background:var(--ink);color:#fff;">Monthly</button>
+      <button onclick="setBilling('annual')" class="billing-btn" data-billing="annual" style="padding:8px 18px;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--ink-muted);">Annual <span style="font-size:10px;color:var(--green);font-weight:700;">Save 30%</span></button>
+      <button onclick="setBilling('lifetime')" class="billing-btn" data-billing="lifetime" style="padding:8px 18px;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--ink-muted);">Lifetime <span style="font-size:10px;color:var(--red);font-weight:700;">🔥</span></button>
+    </div>
+
     <div class="pricing-grid">
 
+      <!-- Free -->
       <div class="price-card">
         <div class="price-name">Free</div>
         <div class="price-amount">$0 <span>/ forever</span></div>
@@ -466,10 +478,11 @@ footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom
         <a href="https://chromewebstore.google.com" class="btn btn-outline" target="_blank">Install Free</a>
       </div>
 
+      <!-- Pro -->
       <div class="price-card featured">
         <div class="price-name">Pro</div>
-        <div class="price-amount">$5.99 <span>/ month</span></div>
-        <div class="price-desc">For power users and researchers</div>
+        <div class="price-amount" id="pro-price">$5.99 <span>/ month</span></div>
+        <div class="price-desc" id="pro-desc">For power users and researchers</div>
         <ul class="price-features">
           <li>Unlimited saves & notebooks</li>
           <li>Knowledge graph</li>
@@ -480,13 +493,14 @@ footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom
           <li>Automations & schedules</li>
           <li>6 export formats</li>
         </ul>
-        <a href="https://chromewebstore.google.com" class="btn btn-accent" target="_blank">Start Pro</a>
+        <a href="https://vaultmind.lemonsqueezy.com/checkout/buy/fc89413c-9120-451e-bde1-ccd6512ec3a7" class="btn btn-accent" target="_blank" id="pro-cta">Start Pro</a>
       </div>
 
+      <!-- Team -->
       <div class="price-card">
         <div class="price-name">Team</div>
-        <div class="price-amount">$12.99 <span>/ seat / month</span></div>
-        <div class="price-desc">Shared research for teams</div>
+        <div class="price-amount" id="team-price">$12.99 <span>/ seat / month</span></div>
+        <div class="price-desc" id="team-desc">Shared research for teams</div>
         <ul class="price-features">
           <li>Everything in Pro</li>
           <li>Shared knowledge bases</li>
@@ -495,12 +509,48 @@ footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom
           <li>REST API & webhooks</li>
           <li>Priority support</li>
         </ul>
-        <a href="https://chromewebstore.google.com" class="btn btn-outline" target="_blank">Start Team</a>
+        <a href="https://vaultmind.lemonsqueezy.com/checkout/buy/2da5f71a-160c-44b4-babd-db72d4cd142f" class="btn btn-outline" target="_blank" id="team-cta">Start Team</a>
       </div>
 
     </div>
   </div>
 </section>
+
+<script>
+function setBilling(period) {
+  // Update toggle buttons
+  document.querySelectorAll('.billing-btn').forEach(b => {
+    if (b.dataset.billing === period) {
+      b.style.background = 'var(--ink)';
+      b.style.color = '#fff';
+    } else {
+      b.style.background = 'transparent';
+      b.style.color = 'var(--ink-muted)';
+    }
+  });
+
+  const prices = {
+    monthly:  { pro: '$5.99 <span>/ month</span>',         team: '$12.99 <span>/ seat / month</span>',  proDesc: 'For power users and researchers',                       teamDesc: 'Shared research for teams' },
+    annual:   { pro: '$49.99 <span>/ year</span>',          team: '$109.99 <span>/ seat / year</span>',  proDesc: '$4.17/mo — save $21.89 vs monthly',                     teamDesc: '$9.17/seat/mo — save $45.89 vs monthly' },
+    lifetime: { pro: '$149 <span> one-time</span>',         team: '$349 <span>/ seat one-time</span>',   proDesc: 'Pay once, use forever. No renewals.',                   teamDesc: 'Pay once per seat. Use forever.' },
+  };
+
+  const checkoutUrls = {
+    monthly:  { pro: 'https://vaultmind.lemonsqueezy.com/checkout/buy/c871e158-489c-433e-80a4-22e44e150fcc', team: 'https://vaultmind.lemonsqueezy.com/checkout/buy/ec4a3044-f6b6-4272-9f85-d3813bab4e65' },
+    annual:   { pro: 'https://vaultmind.lemonsqueezy.com/checkout/buy/fc89413c-9120-451e-bde1-ccd6512ec3a7', team: 'https://vaultmind.lemonsqueezy.com/checkout/buy/2da5f71a-160c-44b4-babd-db72d4cd142f' },
+    lifetime: { pro: 'https://vaultmind.lemonsqueezy.com/checkout/buy/76862b71-e452-47d6-9861-3d2f00b0dfd4', team: 'https://vaultmind.lemonsqueezy.com/checkout/buy/60eebf2e-e0df-45b5-a644-2637cc3b2f81' },
+  };
+
+  const p = prices[period];
+  const u = checkoutUrls[period];
+  document.getElementById('pro-price').innerHTML = p.pro;
+  document.getElementById('team-price').innerHTML = p.team;
+  document.getElementById('pro-desc').textContent = p.proDesc;
+  document.getElementById('team-desc').textContent = p.teamDesc;
+  document.getElementById('pro-cta').href = u.pro;
+  document.getElementById('team-cta').href = u.team;
+}
+</script>
 
 <!-- CTA -->
 <section>
