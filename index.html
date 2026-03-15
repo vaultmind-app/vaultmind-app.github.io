@@ -119,6 +119,16 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter:
 .price-list li::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 12px; }
 .price-list li.no::before { content: '—'; color: var(--text3); }
 
+/* Billing toggle buttons */
+.billing-btn {
+  flex: 1; padding: 8px 6px; border: none; border-radius: 8px; cursor: pointer;
+  font-family: var(--font); font-size: 12px; font-weight: 600;
+  background: transparent; color: var(--text3); transition: all 0.2s;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.billing-btn:hover { color: var(--text); }
+.billing-btn.active { background: var(--purple); color: #fff; box-shadow: 0 2px 12px rgba(124,92,255,0.3); }
+
 /* CTA */
 .cta-section { padding: 80px 0; text-align: center; }
 .cta-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 60px 40px; position: relative; overflow: hidden; }
@@ -290,6 +300,18 @@ footer a { color: var(--text2); }
       <div class="price-card featured">
         <div class="price-name">Pro</div>
         <div class="price-amount" id="price-display">$5.99<small>/mo</small></div>
+
+        <!-- Billing toggle -->
+        <div style="display:flex;gap:6px;margin:16px 0 20px;background:var(--bg);border-radius:10px;padding:4px;border:1px solid var(--border);">
+          <button class="billing-btn active" data-plan="monthly" onclick="switchPlan('monthly')">Monthly</button>
+          <button class="billing-btn" data-plan="annual" onclick="switchPlan('annual')">
+            Annual <span style="background:var(--green);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;font-weight:700;">-30%</span>
+          </button>
+          <button class="billing-btn" data-plan="lifetime" onclick="switchPlan('lifetime')">
+            Lifetime <span style="background:#f59e0b;color:#000;font-size:9px;padding:1px 6px;border-radius:8px;margin-left:4px;font-weight:700;">🔥</span>
+          </button>
+        </div>
+
         <ul class="price-list">
           <li>Unlimited saves</li>
           <li>Everything in Free</li>
@@ -300,12 +322,27 @@ footer a { color: var(--text2); }
           <li>6 Export formats</li>
           <li>Bi-directional LLM sync</li>
         </ul>
-        <a href="https://vaultmind.lemonsqueezy.com/checkout/buy/c871e158-489c-433e-80a4-22e44e150fcc" class="btn btn-primary" style="width:100%;justify-content:center;" id="cta-buy">Get Pro</a>
-        <div style="margin-top:10px;font-size:11px;color:var(--text3);">Also available: <a href="https://vaultmind.lemonsqueezy.com/checkout/buy/fc89413c-9120-451e-bde1-ccd6512ec3a7" style="color:var(--purple);">$49.99/year</a> · <a href="https://vaultmind.lemonsqueezy.com/checkout/buy/76862b71-e452-47d6-9861-3d2f00b0dfd4" style="color:var(--purple);">$149 lifetime</a></div>
+        <a href="https://vaultmind.lemonsqueezy.com/checkout/buy/c871e158-489c-433e-80a4-22e44e150fcc" class="btn btn-primary" style="width:100%;justify-content:center;" id="cta-buy">Get Pro — $5.99/mo</a>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+const plans = {
+  monthly:  { price: '$5.99', period: '/mo', label: 'Get Pro — $5.99/mo', url: 'https://vaultmind.lemonsqueezy.com/checkout/buy/c871e158-489c-433e-80a4-22e44e150fcc' },
+  annual:   { price: '$49.99', period: '/yr', label: 'Get Pro — $49.99/yr (Save 30%)', url: 'https://vaultmind.lemonsqueezy.com/checkout/buy/fc89413c-9120-451e-bde1-ccd6512ec3a7' },
+  lifetime: { price: '$149', period: ' once', label: 'Get Pro — $149 Lifetime', url: 'https://vaultmind.lemonsqueezy.com/checkout/buy/76862b71-e452-47d6-9861-3d2f00b0dfd4' },
+};
+function switchPlan(key) {
+  const p = plans[key];
+  document.getElementById('price-display').innerHTML = p.price + '<small>' + p.period + '</small>';
+  const btn = document.getElementById('cta-buy');
+  btn.href = p.url;
+  btn.textContent = p.label;
+  document.querySelectorAll('.billing-btn').forEach(b => b.classList.toggle('active', b.dataset.plan === key));
+}
+</script>
 
 <!-- CTA -->
 <section class="cta-section">
